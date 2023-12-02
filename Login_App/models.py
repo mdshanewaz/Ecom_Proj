@@ -2,7 +2,11 @@ from django.db import models
 
 # To create Custome User Model and Admin Panel
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy as _
+
+# To automatically create one to one objects
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -14,7 +18,7 @@ class MyUserMangerModel(BaseUserManager):
         """ Create and save a user with a given email and password """
 
         if not email:
-            raise ValueError("Email n=must be set!")
+            raise ValueError("Email must be set!")
         
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
@@ -37,15 +41,15 @@ class MyUserMangerModel(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, null=False)
     is_staff = models.BooleanField(
-        ugettext_lazy('staff status'),
+        _('staff status'),
         default = False,
-        helf_text = ugettext_lazy('Designates whether the user can log in this site')
+        help_text = _('Designates whether the user can log in this site')
     )
 
     is_active = models.BooleanField(
-        ugettext_lazy('active'),
+        _('active'),
         default = True,
-        help_text = ugettext_lazy('Designate whether this user should be treated as active. Unselect this instead of deleting accounts')
+        help_text = _('Designate whether this user should be treated as active. Unselect this instead of deleting accounts')
     )
 
     USERNAME_FIELD = 'email'
@@ -63,4 +67,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class ProfileModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-        
+    username = models.CharField(max_length=264, blank=True)
+    full_name = models.CharField(max_length=264, blank=True)
+    address_1 = models.TextField(max_length=300, blank=True)
+    city = models.CharField(max_length=50, blank=True)
+    zipcode = models.CharField(max_length=10, blank=True)
+    country = models.CharField(max_length=50, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    date_joined = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.username + "'s Profile"
+    
+    def is_fully_filld(self):
+        fields_name = [f.name for f in self._meta.get_fields()]
+
+        for field_name in fields_name:
+            value = getattr(self, field_name)
+            if value is None or value=='':
+                return False
+        return True
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        ProfileModel.objects.create(user=instance)
+    
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()

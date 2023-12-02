@@ -1,0 +1,28 @@
+{% extends 'index.html' %}
+
+{% block title_block %} {{ title }} {% endblock %}
+
+{% block body_block %}
+<div class="">
+    <h2>Featured Product</h2>
+    <div class="row">
+        {% for product in object_list %}
+        <div class="col-md-6 col-sm-12 col-lg-3">
+            <figure class="">
+                <div>
+                    <img src="/media/{{ product.mainimage }}" class="img img-fluid" alt="" style="width: 100%; height: 300px;">
+                </div>
+                <figcaption>
+                    <h6> {{ product.name }}</h6>
+                    <div class="">
+                        <span>Price: &#2547; {{ product.price|floatformat:2 }}</span>
+                        <br>
+                        <span>Old Price: &#2547; {{ product.old_price|floatformat:2 }}</span>
+                    </div>
+                </figcaption>
+            </figure>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 
