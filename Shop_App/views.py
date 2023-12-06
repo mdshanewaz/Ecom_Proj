@@ -16,6 +16,6 @@ class HomeView(ListView):
     title = "Billing"
     template_name = 'Shop_App/home.html'
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = ProductModel
     template_name = 'Shop_App/product_detail.html'
