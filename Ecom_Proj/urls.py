@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Shop_App.urls')),
     path('account/', include('Login_App.urls')),
+    path('shop/', include('Order_App.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -13,9 +13,20 @@ from Shop_App.models import ProductModel, CategoryModel
 
 class HomeView(ListView):
     model = ProductModel
-    title = "Billing"
+    title = "Home"
     template_name = 'Shop_App/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = self.title
+        return context
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
     model = ProductModel
+    title = "Product Details"
     template_name = 'Shop_App/product_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = self.title
+        return context
