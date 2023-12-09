@@ -22,6 +22,7 @@ class CartModel(models.Model):
         float_total = format(total, '0.2f')
         return float_total
 
+
 # item1  quantity 3 price 150 total = 450
 # item 2 quantity 1 price 400 total = 400 
 
@@ -35,6 +36,6 @@ class OrderModel(models.Model):
 
     def get_totals(self):
         total = 0
-        for order_item in self.orderitems:
+        for order_item in self.orderitems.all():
             total += float(order_item.get_total())
         return total
