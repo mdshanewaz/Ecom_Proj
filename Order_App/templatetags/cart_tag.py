@@ -8,9 +8,6 @@ register = template.Library()
 def cart_total(user):
     order = OrderModel.objects.filter(user=user, ordered=False)
     if order.exists():
-        
-        print("Order item") 
-        print(order[0].orderitems.count())
         return order[0].orderitems.count()
     else:
         return 0

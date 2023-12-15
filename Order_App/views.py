@@ -54,3 +54,13 @@ def cart_view(request):
     else:
         messages.warning(request, "You don't have  any item in your cart!")
         return redirect('Shop_App:home')
+
+@login_required
+def remove_from_cart_view(request, pk):
+    item = get_object_or_404(ProductModel, pk=pk)
+    order_qs = OrderModel.objects.filter(user=request.user, orderd=False)
+    if order_qs.exists():
+        pass
+    else:
+        messages.info(request, "You don't have any active order")
+        return redirect("Shop_App:home")
