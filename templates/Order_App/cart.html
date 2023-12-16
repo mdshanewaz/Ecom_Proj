@@ -23,12 +23,12 @@
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ cart.item.name }}</td>
                 <td class="text-center">
-                    <a class="mr-2" href="#"><span class="badge badge-light"><i class="fas fa-minus"></i></span></a>
+                    <a class="mr-2" href="{% url 'Order_App:decrease' pk=cart.item.pk %}"><span class="badge bg-light text-dark"><i class="fa-solid fa-minus"></i></span></a>
                     {{ cart.quantity}}
-                    <a class="mr-2" href="#"><span class="badge badge-light"><i class="fas fa-plus"></i></span></a>
+                    <a class="mr-2" href="{% url 'Order_App:increase' pk=cart.item.pk %}"><span class="badge bg-light text-dark"><i class="fa-solid fa-plus"></i></span></a>
                 </td>
                 <td class="text-center">&#2547; {{ cart.get_total }}</td>
-                <td class="text-center"><a class="btn btn-danger btn-sm" href="#">Remove From Cart</a></td>
+                <td class="text-center"><a class="btn btn-danger btn-sm" href="{% url 'Order_App:remove' pk=cart.item.pk %}">Remove From Cart</a></td>
             </tr>
             {% endfor %}
             <tr>
@@ -36,7 +36,7 @@
                 <td colspan="1">Total</td>
                 <td class="text-center" colspan="1">=</td>
                 <td class="text-center">&#2547; {{ order.get_totals | floatformat:2 }}</td>
-                <td class="text-center"><a href="#" class="btn btn-success">Proceed To Checkout</a></td>
+                <td class="text-center"><a href="{% url 'Payment_App:checkout' %}" class="btn btn-success">Proceed To Checkout</a></td>
             </tr>
             <tr>
                 <th scope="row"></th>
