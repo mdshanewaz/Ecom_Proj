@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponsePermanentRedirect
 
+from Login_App.models import ProfileModel
+
 # Messages
 from django.contrib import messages
 
@@ -43,5 +45,13 @@ def checkout_view(request):
 
 @login_required
 def payment_view(request):
-    saved_address = BillingAddressModel.objects,get_or_create(user=request.user)
-    # if not saved_address[0]
+    saved_address = BillingAddressModel.objects.get_or_create(user=request.user)
+    if not saved_address[0].is_fully_filled():
+        messages.info(request, f"Please complete shipping address")
+        return redirect("Payment_App:checkout")
+    
+    if not request.user.profile.is_fully_filled():
+        messages.info(request, f"Please complete profile details!")
+        return redirect("Login_App:profile")
+    
+    return render(request, "Payment_App/payment.html", context={'title':'Payment'})
