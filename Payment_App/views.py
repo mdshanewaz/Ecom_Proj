@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponsePermanentRedirect
+from django.shortcuts import render, redirect, HttpResponsePermanentRedirect
 
 # Messages
 from django.contrib import messages
@@ -13,7 +13,9 @@ from django.contrib.auth.decorators import login_required
 
 # Payment
 import requests
-
+import socket
+from decimal import Decimal
+from django_sslcommerz import *
 
 # Create your views here.
 
@@ -38,3 +40,8 @@ def checkout_view(request):
     order_total = order_qs[0].get_totals()
 
     return render(request, 'Payment_App/checkout.html', context={'title':title, 'saved_address':saved_address, 'form':form, 'order_items':order_items, 'order_total':order_total})
+
+@login_required
+def payment_view(request):
+    saved_address = BillingAddressModel.objects,get_or_create(user=request.user)
+    # if not saved_address[0]
