@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 import requests
 import socket
 from decimal import Decimal
-from django_sslcommerz import *
+from sslcommerz_python.payment import SSLCSession
 
 # Create your views here.
 
@@ -53,5 +53,11 @@ def payment_view(request):
     if not request.user.profile.is_fully_filled():
         messages.info(request, f"Please complete profile details!")
         return redirect("Login_App:profile")
+    
+    store_id = 'pract657c8e70729e6'
+    api_key = 'pract657c8e70729e6@ssl'
+    
+    mypayment = SSLCSession(sslc_is_sandbox=True, sslc_store_id=store_id, sslc_store_pass=api_key)
+    mypayment.set_urls(success_url='', fail_url='', cancel_url='', ipn_url='')
     
     return render(request, "Payment_App/payment.html", context={'title':'Payment'})
