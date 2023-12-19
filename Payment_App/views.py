@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponsePermanentRedirect
-
+from django.urls import reverse
 from Login_App.models import ProfileModel
 
 # Messages
@@ -17,7 +17,6 @@ from django.contrib.auth.decorators import login_required
 import requests
 import socket
 from decimal import Decimal
-from sslcommerz_python.payment import SSLCSession
 
 # Create your views here.
 
@@ -60,4 +59,7 @@ def payment_view(request):
     mypayment = SSLCSession(sslc_is_sandbox=True, sslc_store_id=store_id, sslc_store_pass=api_key)
     mypayment.set_urls(success_url='', fail_url='', cancel_url='', ipn_url='')
     
+    status_url = request.build_absolute_uri()
+    print(status_url)
+
     return render(request, "Payment_App/payment.html", context={'title':'Payment'})
