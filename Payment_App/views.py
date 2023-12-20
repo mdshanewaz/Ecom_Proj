@@ -17,13 +17,13 @@ from django.contrib.auth.decorators import login_required
 import requests
 import socket
 from decimal import Decimal
+from sslcommerz import SSLCOMMERZ
 
 # Create your views here.
 
 @login_required
 def checkout_view(request):
     title = 'Checkout'
-    
     saved_address = BillingAddressModel.objects.get_or_create(user=request.user)
     saved_address = saved_address[0]
     print(saved_address)
@@ -55,11 +55,19 @@ def payment_view(request):
     
     store_id = 'pract657c8e70729e6'
     api_key = 'pract657c8e70729e6@ssl'
+
+    mypayment = SSLCOMMERZ({'store_id': store_id, 'store_pass': api_key, 'issandbox': True})
+
+    status_url = request.build_absolute_uri()
+    print("Hello status_url = ", status_url)
     
-    mypayment = SSLCSession(sslc_is_sandbox=True, sslc_store_id=store_id, sslc_store_pass=api_key)
     mypayment.set_urls(success_url='', fail_url='', cancel_url='', ipn_url='')
     
     status_url = request.build_absolute_uri()
     print(status_url)
 
     return render(request, "Payment_App/payment.html", context={'title':'Payment'})
+
+@login_required
+def complete_view(request):
+    render (request, 'Payment_App/complete.html', context={'title':'Complete',})

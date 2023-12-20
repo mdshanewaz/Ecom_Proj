@@ -7,4 +7,5 @@ app_name = 'Payment_App'
 urlpatterns = [
     path('checkout/', views.checkout_view, name='checkout'),
     path('payment/', views.payment_view, name='payment'),
+    path('status/', views.complete_view, name='complete'),
 ]
